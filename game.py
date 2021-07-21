@@ -21,12 +21,16 @@ pygame.mixer.init()  ## For sound
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("2048")
 clock = pygame.time.Clock()     ## For syncing the FPS
-font = pygame.font.SysFont(None, 300)
+size_100 = pygame.font.SysFont(None, 100)
+size_150 = pygame.font.SysFont(None, 150)
+size_175 = pygame.font.SysFont(None, 150)
+size_200 = pygame.font.SysFont(None, 200)
+size_300 = pygame.font.SysFont(None, 300)
+
+
 
 ## group all the sprites together for ease of update
 all_sprites = pygame.sprite.Group()
-
-
 
 
 #game
@@ -80,12 +84,22 @@ while running:
     for row in range(0,4):
         for col in range(0,4):
             if board.board[row][col].value != 0:
-                pygame.draw.rect(screen, board.board[row][col].generate_shade(), (col*WIDTH/4 + 10,row*HEIGHT/4 + 10,WIDTH/4-20,HEIGHT/4-20))
-                text = font.render(str(2**board.board[row][col].value), True, WHITE)
-
-                screen.blit(text, (col*WIDTH/4 + 43,row*HEIGHT/4 + 10))
+                if 2**board.board[row][col].value < 100:
+                    pygame.draw.rect(screen, board.board[row][col].generate_shade(), (col*WIDTH/4 + 10,row*HEIGHT/4 + 10,WIDTH/4-20,HEIGHT/4-20))
+                    text = size_200.render(str(2**board.board[row][col].value), True, WHITE)
+                    screen.blit(text, (col*WIDTH/4 +WIDTH/8 - text.get_rect().width/2, row*HEIGHT/4 +HEIGHT/8 - text.get_rect().height/2))
+                elif 2**board.board[row][col].value < 1000:
+                    pygame.draw.rect(screen, board.board[row][col].generate_shade(), (col*WIDTH/4 + 10,row*HEIGHT/4 + 10,WIDTH/4-20,HEIGHT/4-20))
+                    text = size_175.render(str(2**board.board[row][col].value), True, WHITE)
+                    screen.blit(text, (col*WIDTH/4 +WIDTH/8 - text.get_rect().width/2, row*HEIGHT/4 +HEIGHT/8 - text.get_rect().height/2))
+                else:
+                    pygame.draw.rect(screen, board.board[row][col].generate_shade(), (col*WIDTH/4 + 10,row*HEIGHT/4 + 10,WIDTH/4-20,HEIGHT/4-20))
+                    text = size_150.render(str(2**board.board[row][col].value), True, WHITE)
+                    screen.blit(text, (col*WIDTH/4 +WIDTH/8 - text.get_rect().width/2, row*HEIGHT/4 +HEIGHT/8 - text.get_rect().height/2))
     
-
+    if board.check_status() == 2:
+        text = size_200.render("You Win!!!", True, WHITE)
+        screen.blit(text, (WIDTH / 2 - text.get_rect().width/2, HEIGHT / 2 - text.get_rect().height/2))
     ########################
 
     ## Done after drawing everything to the screen
